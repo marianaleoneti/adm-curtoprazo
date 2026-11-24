@@ -125,28 +125,19 @@ function render52WeekRange(suffix, data) {
   const price = data.regularMarketPrice;
   const lowElement = getElement(`market52wLow${suffix}`);
   const highElement = getElement(`market52wHigh${suffix}`);
+  const currentPriceElement = getElement(`market52wCurrent${suffix}`);
   const positionElement = getElement(`market52wPosition${suffix}`);
-  const track = getElement(`market52wTrack${suffix}`);
-  const marker = track.querySelector(".market-range-marker");
 
-  lowElement.textContent = `Mín. ${formatOptionalCurrency(low)}`;
-  highElement.textContent = `Máx. ${formatOptionalCurrency(high)}`;
+  lowElement.textContent = formatOptionalCurrency(low);
+  highElement.textContent = formatOptionalCurrency(high);
+  currentPriceElement.textContent = formatOptionalCurrency(price);
   if (!isFiniteNumber(price) || !isFiniteNumber(low) || !isFiniteNumber(high) || high <= low) {
     positionElement.textContent = "—";
-    track.setAttribute("aria-valuenow", "0");
-    track.setAttribute("aria-valuetext", "Faixa de 52 semanas indisponível");
-    marker.style.left = "0%";
     return;
   }
 
   const position = Math.min(100, Math.max(0, (price - low) / (high - low) * 100));
   positionElement.textContent = `${percentFormat.format(position)}% da faixa`;
-  track.setAttribute("aria-valuenow", position.toFixed(1));
-  track.setAttribute(
-    "aria-valuetext",
-    `Preço atual ${currencyFormat.format(price)}: ${percentFormat.format(position)}% entre ${currencyFormat.format(low)} e ${currencyFormat.format(high)}`
-  );
-  marker.style.left = `${position}%`;
 }
 
 function formatMarketTime(value) {
